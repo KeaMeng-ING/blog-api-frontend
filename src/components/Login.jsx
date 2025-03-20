@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useEffect } from "react";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -30,8 +29,6 @@ const Login = () => {
         formData
       );
 
-      setData(response.data);
-
       // Store the token and user info in localStorage
       localStorage.setItem("token", response.data.token);
       localStorage.setItem(
@@ -43,15 +40,14 @@ const Login = () => {
         })
       );
 
-      // Set the token in axios defaults for future requests
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response.data.token}`;
 
-      // Set loggedIn state to true
+      setData(response.data);
       setLoggedIn(true);
 
-      // Redirect to dashboard or home page
+      window.location.href = "/";
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setError("Invalid email or password");
@@ -64,11 +60,6 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("LoggedIn state:", loggedIn);
-    console.log(data);
-  }, [loggedIn, data]);
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -79,7 +70,6 @@ const Login = () => {
             You are already logged in {data.firstName}.
           </div>
         )}
-        22
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
