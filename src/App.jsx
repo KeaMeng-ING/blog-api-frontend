@@ -85,6 +85,7 @@ function App() {
           error.response?.data?.message || error.message || "An error occurred"
         );
         setDatas([]);
+        console.log("log in move here");
         navigate("/login");
       } finally {
         setLoading(false);
@@ -98,7 +99,7 @@ function App() {
     <>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<RootLayout />}>
+          <Route path="/" element={<RootLayout loggedIn={loggedIn} />}>
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route
@@ -118,7 +119,7 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             {/* Redirect to login if no path matches */}
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Route>
         </Routes>
       </AuthProvider>
