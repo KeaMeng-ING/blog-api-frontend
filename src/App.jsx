@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import RootLayout from "./components/layouts/root-layout.jsx";
 import { AuthProvider } from "./context/AuthContext";
 import Home from "./components/Home.jsx";
-import thumbnail from "./assets/thumbnail.jpg";
+import CreatePost from "./components/CreatePost";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -16,16 +16,7 @@ function App() {
   const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const featuredPost = {
-    title: "Featured Post Title",
-    content: "This is a subtitle for the featured post.",
-    excerpt: "This is an excerpt for the featured post.",
-    readTime: "5 min read",
-    subtitle: "This is a subtitle for the featured post.",
-    imageUrl: thumbnail,
-    category: "Category",
-    date: "2023-10-01",
-  };
+  const [featuredPost, setFeaturedPost] = useState({});
 
   // Set up authentication token first
   useEffect(() => {
@@ -71,6 +62,14 @@ function App() {
         const response = await axios.get("http://localhost:3000/api/posts");
         console.log("API response:", response.data);
 
+        for (let i = 0; i < response.data.posts.length; i++) {
+          if (response.data.posts[i].isFeatured) {
+            setFeaturedPost({
+              ...response.data.posts[i],
+            });
+          }
+        }
+
         if (response.data && response.data.posts) {
           if (response.data.posts.length === 0) {
             setError("No posts found");
@@ -86,6 +85,9 @@ function App() {
         );
         setDatas([]);
         console.log("log in move here");
+        setLoggedIn(false);
+        localStorage.removeItem("token");
+        delete axios.defaults.headers.common["Authorization"];
         navigate("/login");
       } finally {
         setLoading(false);
@@ -116,11 +118,11 @@ function App() {
             </Route>
 
             {/* Public Routes */}
-            <Route path="/login" element={<Login />} />
-
+            <Route path="/create" element={<CreatePost />} />
             {/* Redirect to login if no path matches */}
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
+          <Route path="/login" element={<Login loggedIn={loggedIn} />} />
         </Routes>
       </AuthProvider>
     </>

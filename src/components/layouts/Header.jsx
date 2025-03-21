@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, SquarePlus } from "lucide-react";
 
 export default function Header({ darkMode, toggleDarkMode, loggedIn }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,9 +25,9 @@ export default function Header({ darkMode, toggleDarkMode, loggedIn }) {
       <div className="container  max-w-screen-xl mx-auto">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <a href="#" className="text-xl font-bold">
+            <NavLink to="/" className="text-xl font-bold">
               The Blog
-            </a>
+            </NavLink>
           </div>
 
           {/* Desktop Navigation */}
@@ -82,6 +82,12 @@ export default function Header({ darkMode, toggleDarkMode, loggedIn }) {
                     <NavLink to="/profile" className="flex items-center">
                       <User className="mr-2 h-4 w-4 text-white" />
                       <span className="text-white">Profile</span>
+                    </NavLink>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <NavLink to="/create" className="flex items-center">
+                      <SquarePlus className="mr-2 h-4 w-4 text-white" />
+                      <span className="text-white">Create Post</span>
                     </NavLink>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

@@ -11,7 +11,7 @@ export default function FeaturedPost({ post }) {
       <div className="p-8 flex flex-col justify-center">
         <div className="flex items-center space-x-2 mb-4">
           <span className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm font-medium">
-            {post.category}
+            {post.categoryName}
           </span>
           <span className="text-gray-500 dark:text-gray-400 text-sm">•</span>
           <span className="text-gray-500 dark:text-gray-400 text-sm">
@@ -26,7 +26,8 @@ export default function FeaturedPost({ post }) {
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700 mr-3"></div>
           <div>
-            <div className="font-medium">{post.author}</div>
+            <div className="font-medium text-sm">{post.authorName}</div>
+
             <div className="text-gray-500 dark:text-gray-400 text-sm">
               {post.date}
             </div>
