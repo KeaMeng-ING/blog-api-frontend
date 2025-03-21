@@ -1,9 +1,9 @@
 "use client";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = () => {
-  const { user, loading } = useAuth();
+  const { user, loading } = useAuthContext();
 
   if (loading) {
     return (

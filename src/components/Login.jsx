@@ -5,6 +5,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 
 const Login = (props) => {
+  console.log(props.loggedIn);
   if (props.loggedIn) {
     window.location.href = "/";
   }
@@ -54,7 +55,8 @@ const Login = (props) => {
       setData(response.data);
       setLoggedIn(true);
 
-      window.location.href = "/";
+      // window.location.href = "/";
+      console.log("should be redirect");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setError("Invalid email or password");

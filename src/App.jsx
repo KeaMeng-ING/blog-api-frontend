@@ -60,6 +60,7 @@ function App() {
         setLoading(true);
         console.log("Fetching posts...");
         const response = await axios.get("http://localhost:3000/api/posts");
+        // const response = await api_client.get("/api/posts");
         console.log("API response:", response.data);
 
         for (let i = 0; i < response.data.posts.length; i++) {
