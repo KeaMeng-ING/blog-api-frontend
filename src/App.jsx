@@ -6,12 +6,12 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RootLayout from "./components/layouts/root-layout.jsx";
-import { AuthProvider } from "./context/AuthContext";
 import Home from "./components/Home.jsx";
 import CreatePost from "./components/CreatePost";
+import { useAuthContext } from "./hooks/useAuthContext";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const { user, setUser } = useAuthContext();
   const navigate = useNavigate();
   const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,17 +21,18 @@ function App() {
   // Set up authentication token first
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setLoggedIn(true);
+      setUser(JSON.parse(storedUser)); // We can try to delete this
     } else {
       delete axios.defaults.headers.common["Authorization"];
-      setLoggedIn(false);
+      setUser(null);
       if (window.location.pathname !== "/login") {
         navigate("/login");
       }
     }
-  }, [navigate]);
+  }, [navigate, setUser]);
 
   // Add axios interceptor for 401 errors
   useEffect(() => {
@@ -42,7 +43,7 @@ function App() {
           console.log("error 1");
           // Unauthorized - token expired or invalid
           localStorage.removeItem("token");
-          setLoggedIn(false);
+          setUser(null);
           navigate("/login");
           // The redirect will happen in the loggedIn useEffect
         }
@@ -53,11 +54,11 @@ function App() {
     return () => {
       axios.interceptors.response.eject(interceptor);
     };
-  }, [navigate]);
+  }, [navigate, setUser]);
 
   // Fetch posts data only if logged in
   useEffect(() => {
-    if (!loggedIn) return; // Don't fetch if not logged in
+    if (!user) return; // Don't fetch if not logged in
 
     const fetchPosts = async () => {
       try {
@@ -84,7 +85,7 @@ function App() {
       } catch (error) {
         console.error("Error fetching posts:", error);
         if (error.response?.status === 401) {
-          setLoggedIn(false);
+          setUser(null);
           localStorage.removeItem("token");
           delete axios.defaults.headers.common["Authorization"];
           navigate("/login");
@@ -102,36 +103,34 @@ function App() {
     };
 
     fetchPosts();
-  }, [loggedIn, navigate]); // Depend on loggedIn state
+  }, [setUser, navigate, user]); // Depend on loggedIn state
 
   return (
     <>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<RootLayout loggedIn={loggedIn} />}>
-            {/* Protected Routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route
-                path="/"
-                element={
-                  <Home
-                    featuredPost={featuredPost}
-                    allPosts={datas}
-                    loading={loading}
-                    error={error}
-                  />
-                }
-              />
-            </Route>
-
-            {/* Public Routes */}
-            <Route path="/create" element={<CreatePost />} />
-            {/* Redirect to login if no path matches */}
-            <Route path="*" element={<Navigate to="/" />} />
+      <Routes>
+        <Route path="/" element={<RootLayout />}>
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route
+              path="/"
+              element={
+                <Home
+                  featuredPost={featuredPost}
+                  allPosts={datas}
+                  loading={loading}
+                  error={error}
+                />
+              }
+            />
           </Route>
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </AuthProvider>
+
+          {/* Public Routes */}
+          <Route path="/create" element={<CreatePost />} />
+          {/* Redirect to login if no path matches */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Route>
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </>
   );
 }

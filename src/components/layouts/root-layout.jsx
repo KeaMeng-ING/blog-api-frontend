@@ -2,9 +2,11 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
-export default function RootLayout(props) {
+export default function RootLayout() {
   const [darkMode, setDarkMode] = useState(true);
+  const { user } = useAuthContext();
 
   useEffect(() => {
     // Apply dark mode class to document
@@ -23,7 +25,7 @@ export default function RootLayout(props) {
       <Header
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
-        loggedIn={props.loggedIn}
+        loggedIn={user ? true : false}
       />
       <Outlet />
       <Footer />
