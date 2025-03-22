@@ -1,13 +1,25 @@
+import { useAuthContext } from "@/hooks/useAuthContext";
 import BlogGrid from "./BlogGrid";
 import FeaturedPost from "./FeaturedPost";
+import { useNavigate } from "react-router-dom";
 
 export default function Home(props) {
+  const navigate = useNavigate();
+  // Check if the user is logged in
+  const { user } = useAuthContext();
+  if (!user) {
+    // Redirect to the login page if not logged in
+    navigate("/login");
+  }
+
   return (
     <>
       <div className="min-h-screen bg-white dark:bg-[#111827] text-gray-900 dark:text-gray-100 transition-colors duration-200">
         <div className="container max-w-screen-xl mx-auto">
           {props.loading && (
-            <div className="text-gray-500">Loading posts...</div>
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="text-gray-500">Loading posts...</div>
+            </div>
           )}
 
           {props.error && (

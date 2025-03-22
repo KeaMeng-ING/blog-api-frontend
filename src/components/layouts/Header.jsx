@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Search, Moon, Sun } from "lucide-react";
 import { NavLink } from "react-router-dom";
@@ -20,6 +18,10 @@ export default function Header({ darkMode, toggleDarkMode, loggedIn }) {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -94,8 +96,9 @@ export default function Header({ darkMode, toggleDarkMode, loggedIn }) {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild onClick={logout}>
                     <NavLink
-                      to="/logout"
                       className="flex items-center text-red-500"
+                      onClick={handleLogout}
+                      to={"/login"}
                     >
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Logout</span>

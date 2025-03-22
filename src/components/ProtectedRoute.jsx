@@ -1,4 +1,5 @@
 "use client";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuthContext } from "@/hook/useAuthContext"; // Correct import path
 

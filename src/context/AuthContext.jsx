@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in on page load
     const loadUser = () => {
       const token = localStorage.getItem("token");
-      const storedUser = localStorage.getItem("user");
+      const storedUser = localStorage.getItem("user"); // TODO: Delete
 
       if (token && storedUser) {
         // Set axios default headers
@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
     delete axios.defaults.headers.common["Authorization"];
     setUser(null);
   };

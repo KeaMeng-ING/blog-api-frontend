@@ -64,6 +64,7 @@ function App() {
         setLoading(true);
         console.log("Fetching posts...");
         const response = await axios.get("http://localhost:3000/api/posts");
+        // const response = await api_client.get("/api/posts");
         console.log("API response:", response.data);
 
         const featured = response.data.posts.find((post) => post.isFeatured);
