@@ -27,7 +27,9 @@ function App() {
     } else {
       delete axios.defaults.headers.common["Authorization"];
       setLoggedIn(false);
-      navigate("/login");
+      if (window.location.pathname !== "/login") {
+        navigate("/login");
+      }
     }
   }, [navigate]);
 
@@ -37,9 +39,11 @@ function App() {
       (response) => response,
       (error) => {
         if (error.response && error.response.status === 401) {
+          console.log("error 1");
           // Unauthorized - token expired or invalid
           localStorage.removeItem("token");
           setLoggedIn(false);
+          navigate("/login");
           // The redirect will happen in the loggedIn useEffect
         }
         return Promise.reject(error);
@@ -62,16 +66,14 @@ function App() {
         const response = await axios.get("http://localhost:3000/api/posts");
         console.log("API response:", response.data);
 
-        for (let i = 0; i < response.data.posts.length; i++) {
-          if (response.data.posts[i].isFeatured) {
-            setFeaturedPost({
-              ...response.data.posts[i],
-            });
-          }
+        const featured = response.data.posts.find((post) => post.isFeatured);
+        if (featured) {
+          setFeaturedPost(featured);
         }
 
         if (response.data && response.data.posts) {
           if (response.data.posts.length === 0) {
+            console.log("error 2");
             setError("No posts found");
           }
           setDatas(response.data.posts);
@@ -80,15 +82,19 @@ function App() {
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
-        setError(
-          error.response?.data?.message || error.message || "An error occurred"
-        );
+        if (error.response?.status === 401) {
+          setLoggedIn(false);
+          localStorage.removeItem("token");
+          delete axios.defaults.headers.common["Authorization"];
+          navigate("/login");
+        } else {
+          setError(
+            error.response?.data?.message ||
+              error.message ||
+              "An error occurred"
+          );
+        }
         setDatas([]);
-        console.log("log in move here");
-        setLoggedIn(false);
-        localStorage.removeItem("token");
-        delete axios.defaults.headers.common["Authorization"];
-        navigate("/login");
       } finally {
         setLoading(false);
       }

@@ -3,11 +3,19 @@
 import { useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
+import { useAuthContext } from "@/hook/useAuthContext"; // Correct import path
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Login = (props) => {
-  if (props.loggedIn) {
-    window.location.href = "/";
-  }
+  const { user, setUser } = useAuthContext();
+  const navigate = useNavigate();
+  useEffect(() => {
+    console.log(user);
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -15,8 +23,7 @@ const Login = (props) => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [data, setData] = useState({});
+  // const [loggedIn, setLoggedIn] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -51,10 +58,14 @@ const Login = (props) => {
         "Authorization"
       ] = `Bearer ${response.data.token}`;
 
-      setData(response.data);
-      setLoggedIn(true);
+      setUser({
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+        email: response.data.email,
+      });
+      // setLoggedIn(true);
 
-      window.location.href = "/";
+      // navigate("/");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setError("Invalid email or password");
@@ -80,12 +91,12 @@ const Login = (props) => {
             Login
           </h2>
 
-          {/* If logged in */}
+          {/* If logged in
           {loggedIn && (
             <div className="mb-4 rounded border border-green-700 bg-green-900/30 px-4 py-3 text-green-400">
               You are already logged in {data.firstName}.
             </div>
-          )}
+          )} */}
 
           {/* Error message */}
           {error && (

@@ -12,9 +12,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { LogOut, User, SquarePlus } from "lucide-react";
+import { useAuthContext } from "@/hook/useAuthContext";
 
 export default function Header({ darkMode, toggleDarkMode, loggedIn }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { logout } = useAuthContext();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -90,7 +92,7 @@ export default function Header({ darkMode, toggleDarkMode, loggedIn }) {
                       <span className="text-white">Create Post</span>
                     </NavLink>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild onClick={logout}>
                     <NavLink
                       to="/logout"
                       className="flex items-center text-red-500"
