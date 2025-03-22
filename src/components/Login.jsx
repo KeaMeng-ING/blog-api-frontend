@@ -7,7 +7,7 @@ import { useAuthContext } from "@/hook/useAuthContext"; // Correct import path
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-const Login = (props) => {
+export default function Login() {
   const { user, setUser } = useAuthContext();
   const navigate = useNavigate();
   useEffect(() => {
@@ -179,6 +179,4 @@ const Login = (props) => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}

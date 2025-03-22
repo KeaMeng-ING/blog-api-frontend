@@ -129,7 +129,7 @@ function App() {
             {/* Redirect to login if no path matches */}
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
-          <Route path="/login" element={<Login loggedIn={loggedIn} />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </AuthProvider>
     </>
